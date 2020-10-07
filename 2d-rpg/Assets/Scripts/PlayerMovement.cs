@@ -23,7 +23,18 @@ public class PlayerMovement : MonoBehaviour
         change = Vector3.zero;
         change.x = Input.GetAxisRaw("Horizontal");
         change.y = Input.GetAxisRaw("Vertical");
+        if (Input.GetButtonDown("Attack")){
+            StartCoroutine(AttackCo());
+        }
         UpdateAnimationAndMove();
+    }
+
+    private IEnumerator AttackCo()
+    {
+        animator.SetBool("attacking", true);
+        yield return null;
+        animator.SetBool("attacking",false);
+        yield return new WaitForSeconds(.3f);
     }
 
     private void UpdateAnimationAndMove()
