@@ -18,11 +18,9 @@ public class Knockback : MonoBehaviour
             //if enemy exist
             if(enemy != null)
             {
-                //turn of kinematic, it's necessary to impulse enemy's body
-                enemy.isKinematic = false;
+                enemy.GetComponent<Enemy>().currentState = EnemyState.stagger;
                 //get player and enemy difference position
-                Vector2 difference =
-                    enemy.transform.position - transform.position;
+                Vector2 difference = enemy.transform.position - transform.position;
                 //get impulse using the difference 
                 difference = difference.normalized * thrust;
                 //impulse
@@ -40,7 +38,7 @@ public class Knockback : MonoBehaviour
             //wait for knocktime and then reduce velocity to zero to stop enemy's impulse, after that set enemy's rigidbody to kinematic
             yield return new WaitForSeconds(knockTime);
             enemy.velocity = Vector2.zero;
-            enemy.isKinematic = true;
+            enemy.GetComponent<Enemy>().currentState = EnemyState.idle;
         }
     }
 }

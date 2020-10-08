@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EnemyState
+{
+    idle,
+    walk,
+    attack,
+    stagger
+}
+
 public class Enemy : MonoBehaviour
 {
+    public EnemyState currentState;
     public int health; //enemy health
     public string enemyName; //enemy name
     public int baseAttack; //enemy attack
