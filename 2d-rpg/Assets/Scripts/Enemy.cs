@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health;
-    public string enemyName;
-    public int baseAttack;
-    public float moveSpeed;
+    public int health; //enemy health
+    public string enemyName; //enemy name
+    public int baseAttack; //enemy attack
+    public float moveSpeed; //enemy velocity
 
     // Start is called before the first frame update
     void Start()
