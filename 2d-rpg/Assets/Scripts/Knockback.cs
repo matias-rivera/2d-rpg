@@ -11,34 +11,39 @@ public class Knockback : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Breakable")
+            && this.gameObject.CompareTag("Player"))
+        {
+            collision.GetComponent<Pot>().Smash();
+        }
+
+
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
             //get enemy rigidbody
-            Rigidbody2D enemy = collision.GetComponent<Rigidbody2D>();
+            Rigidbody2D hit = collision.GetComponent<Rigidbody2D>();
             //if enemy exist
-            if(enemy != null)
+            if(hit != null)
             {
-                enemy.GetComponent<Enemy>().currentState = EnemyState.stagger;
                 //get player and enemy difference position
-                Vector2 difference = enemy.transform.position - transform.position;
+                Vector2 difference = hit.transform.position - transform.position;
                 //get impulse using the difference 
                 difference = difference.normalized * thrust;
                 //impulse
-                enemy.AddForce(difference, ForceMode2D.Impulse);
-                //stop enemy impulse
-                StartCoroutine(KnockCo(enemy));
+                hit.AddForce(difference, ForceMode2D.Impulse);
+                if (collision.gameObject.CompareTag("Enemy"))
+                {
+                    hit.GetComponent<Enemy>().currentState = EnemyState.stagger;
+                    collision.GetComponent<Enemy>().Knock(hit, knockTime);
+                }
+                if (collision.gameObject.CompareTag("Player"))
+                {
+                    hit.GetComponent<PlayerMovement>().currentState = PlayerState.stagger;
+                    collision.GetComponent<PlayerMovement>().Knock(knockTime);
+                }
+             
             }
         }
     }
 
-    private IEnumerator KnockCo(Rigidbody2D enemy)
-    {
-        if(enemy != null)
-        {
-            //wait for knocktime and then reduce velocity to zero to stop enemy's impulse, after that set enemy's rigidbody to kinematic
-            yield return new WaitForSeconds(knockTime);
-            enemy.velocity = Vector2.zero;
-            enemy.GetComponent<Enemy>().currentState = EnemyState.idle;
-        }
-    }
 }
